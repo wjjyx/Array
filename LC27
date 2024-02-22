@@ -1,0 +1,133 @@
+//To understand that the elements of an array are contiguous in memory and cannot be individually deleted but only overwritten.
+//The two-pointer technique (fast-slow pointer technique) is very common in array and linked list operations, 
+//and many interview questions involving operations on arrays, linked lists, strings, etc., use the two-pointer technique. 
+
+//The two-pointer technique: It accomplishes the work of two for loops within a single for loop by using a fast pointer and a slow pointer.
+//Fast pointer: Searches for elements of the new array, which is an array without the target element.
+//Slow pointer: Points to the position where the new array index is updated.
+//time：O(n)；space：O(1)
+
+/*
+Two Pointers Approach: Based on the description of the problem where the order of elements can change, this method ensures the minimum movement of elements.
+Time Complexity: O(n)
+Space Complexity: O(1)
+*/
+
+python：
+
+class Solution:
+    def removeElement(self, nums: List[int], val: int) -> int:
+        # Two pointers approach
+        fast = 0  # Fast pointer
+        slow = 0  # Slow pointer
+        size = len(nums)
+        while fast < size:  # Excluding the equal sign because when a = size, nums[a] will be out of bounds
+            # Slow is used to collect values not equal to val. If the value corresponding to fast is not equal to val, it is replaced with slow.
+            if nums[fast] != val:
+                nums[slow] = nums[fast]
+                slow += 1
+            fast += 1
+        return slow
+
+java：
+
+class Solution {
+    public int removeElement(int[] nums, int val) {
+        // Two pointers approach
+        int slowIndex = 0;
+        for (int fastIndex = 0; fastIndex < nums.length; fastIndex++) {
+            if (nums[fastIndex] != val) {
+                nums[slowIndex] = nums[fastIndex];
+                slowIndex++;
+            }
+        }
+        return slowIndex;
+    }
+}
+
+// Two Pointers Approach 双向双指针
+class Solution {
+    public int removeElement(int[] nums, int val) {
+        int left = 0;
+        int right = nums.length - 1;
+        while(right >= 0 && nums[right] == val) right--; // Move right to the first element from the right that is not equal to val
+        while(left <= right) {
+            if(nums[left] == val) { // Element at left position needs to be removed
+                // Move element at right position to left (override), and remove right position
+                nums[left] = nums[right];
+                right--;
+            }
+            left++;
+            while(right >= 0 && nums[right] == val) right--;
+        }
+        return left;
+    }
+}
+
+// Two Pointers Approach 双向双指针 (Version 2)
+class Solution {
+    public int removeElement(int[] nums, int val) {
+        int left = 0;
+        int right = nums.length - 1;
+        while(left <= right){
+            if(nums[left] == val){
+                nums[left] = nums[right];
+                right--;
+            }else {
+                // This handles the case where the value pointed to by the right pointer is equal to val
+                left++;
+            }
+        }
+        return left;
+    }
+}
+
+
+
+c:
+
+int removeElement(int* nums, int numsSize, int val){
+    int slow = 0;
+    for(int fast = 0; fast < numsSize; fast++) {
+        // If the element at the fast pointer position is not equal to the element to be deleted
+        if(nums[fast] != val) {
+            // Move it to the position pointed to by the slow pointer, and increment the slow pointer
+            nums[slow++] = nums[fast];
+        }
+    }
+    // The size of the slow pointer at the end is the size of the new array
+    return slow;
+}
+
+
+
+#include <stdio.h>
+
+int removeElement(int* nums, int numsSize, int val){
+    int slow = 0;
+    for(int fast = 0; fast < numsSize; fast++) {
+        // If the element at the fast pointer position is not equal to the element to be deleted
+        if(nums[fast] != val) {
+            // Move it to the position pointed to by the slow pointer, and increment the slow pointer
+            nums[slow++] = nums[fast];
+        }
+    }
+    // The size of the slow pointer at the end is the size of the new array
+    return slow;
+}
+
+int main() {
+    int nums[] = {3, 2, 2, 3};
+    int val = 3;
+    int numsSize = sizeof(nums) / sizeof(nums[0]);
+    
+    int newSize = removeElement(nums, numsSize, val);
+
+    printf("New array: ");
+    for (int i = 0; i < newSize; i++) {
+        printf("%d ", nums[i]);
+    }
+    printf("\nNew size: %d\n", newSize);
+
+    return 0;
+}
