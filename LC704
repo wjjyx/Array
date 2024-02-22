@@ -1,0 +1,82 @@
+//binary search
+//The premise of this problem is that the array is sorted, and the problem also emphasizes that there are no duplicate elements in the array. 
+//Because once there are duplicate elements, the index returned by binary search may not be unique. These are the prerequisites for using binary search. 
+//When sees that the conditions described in the problem satisfy the above conditions, they should consider whether binary search can be used.
+
+//Target is defined within the interval [left, right], so the following two points apply:
+//while (left <= right) should use <= because left == right is meaningful, hence <= is used.
+//If nums[middle] > target, then right should be assigned as middle - 1, because the current nums[middle] is definitely not the target. 
+//Therefore, the ending index position of the left interval to be searched next is middle - 1.
+
+python:
+class Solution:
+    def search(self, nums: List[int], target: int) -> int:
+        left = 0
+        right = len(nums) - 1  # Define target in the left-closed and right-closed interval [left, right]
+        while left <= right:  # When left == right, the interval [left, right] is still valid, so use <=
+            middle = left + ((right - left) // 2)  # Prevent overflow, equivalent to (left + right) // 2
+            if nums[middle] > target:
+                right = middle - 1  # Target is in the left interval, so [left, middle - 1]
+            elif nums[middle] < target:
+                left = middle + 1  # Target is in the right interval, so [middle + 1, right]
+            else:  # nums[middle] == target
+                return middle  # The target value is found in the array, return the index directly
+        # The target value is not found
+        return -1
+
+
+
+c：
+#include <stdio.h>
+
+int search(int nums[], int numsSize, int target) {
+    int left = 0;
+    int right = numsSize - 1; // Define target in the closed range [left, right]
+    while (left <= right) { // When left == right, the range [left, right] is still valid, so use <=
+        int middle = left + ((right - left) / 2); // To prevent overflow, equivalent to (left + right) / 2
+        if (nums[middle] > target) {
+            right = middle - 1; // Target is in the left interval, so [left, middle - 1]
+        } else if (nums[middle] < target) {
+            left = middle + 1; // Target is in the right interval, so [middle + 1, right]
+        } else { // nums[middle] == target
+            return middle; // Target value found in the array, directly return the index
+        }
+    }
+    // Target value not found
+    return -1;
+}
+
+int main() {
+    int nums[] = {1, 2, 3, 4, 5, 6, 7, 8, 9};
+    int numsSize = sizeof(nums) / sizeof(nums[0]);
+    int target = 6;
+    int result = search(nums, numsSize, target);
+    if (result != -1) {
+        printf("Target found at index %d\n", result);
+    } else {
+        printf("Target not found\n");
+    }
+    return 0;
+}
+
+
+
+java:
+class Solution {
+    public int search(int[] nums, int target) {
+        int left = 0;
+        int right = nums.length - 1; // Define target in the closed range [left, right]
+        while (left <= right) { // When left == right, the range [left, right] is still valid, so use <=
+            int middle = left + ((right - left) / 2); // To prevent overflow, equivalent to (left + right) / 2
+            if (nums[middle] > target) {
+                right = middle - 1; // Target is in the left interval, so [left, middle - 1]
+            } else if (nums[middle] < target) {
+                left = middle + 1; // Target is in the right interval, so [middle + 1, right]
+            } else { // nums[middle] == target
+                return middle; // Target value found in the array, directly return the index
+            }
+        }
+        // Target value not found
+        return -1;
+    }
+}
